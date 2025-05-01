@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpongeBob Episode Bracket</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f8ff; }
+    h1 { text-align: center; }
+    .matchup { margin: 10px 0; display: flex; justify-content: space-between; align-items: center; }
+    .matchup button { margin-left: 10px; }
+    .round { margin-top: 40px; }
+    .winner { font-weight: bold; color: green; }
+  </style>
+</head>
+<body>
+  <h1>SpongeBob Episode Bracket - Round 1</h1>
+  <div id="bracket"></div>
+  <div id="nextRound" class="round"></div>
+
+  <script>
+    let episodes = [
+      "Help Wanted", "Reef Blower", "Tea at the Treedome", "Bubblestand", "Ripped Pants",
+      "Jellyfishing", "Plankton!", "Naughty Nautical Neighbors", "Boating School", "Pizza Delivery",
+      "Home Sweet Pineapple", "Mermaid Man and Barnacle Boy", "Pickles", "Hall Monitor", "Jellyfish Jam",
+      "Sandy's Rocket", "Squeaky Boots", "Nature Pants", "Opposite Day", "Culture Shock", "F.U.N.",
+      "MuscleBob BuffPants", "Squidward the Unfriendly Ghost", "The Chaperone", "Employee of the Month",
+      "Scaredy Pants", "I Was a Teenage Gary", "SB-129", "Karate Choppers", "Sleepy Time", "Suds",
+      "Valentine's Day", "The Paper", "Arrgh!", "Rock Bottom", "Texas", "Walking Small", "Fools in April",
+      "Neptune's Spatula", "Hooky", "Mermaid Man and Barnacle Boy II", "Your Shoe's Untied", "Squid's Day Off",
+      "Something Smells", "Bossy Boots", "Big Pink Loser", "Bubble Buddy", "Dying for Pie", "Imitation Krabs",
+      "Wormy", "Patty Hype", "Grandma's Kisses", "Squidville", "Prehibernation Week", "Life of Crime",
+      "Christmas Who?", "Survival of the Idiots", "Dumped", "No Free Rides", "I'm Your Biggest Fanatic",
+      "Mermaid Man and Barnacle Boy III", "Squirrel Jokes", "Pressure", "The Smoking Peanut", "Shanghaied",
+      "Gary Takes a Bath", "Welcome to the Chum Bucket", "Frankendoodle", "The Secret Box", "Band Geeks",
+      "Graveyard Shift", "Krusty Love", "Procrastination", "I'm with Stupid", "Sailor Mouth", "Artist Unknown",
+      "Jellyfish Hunter", "The Fry Cook Games", "Squid on Strike", "Sandy, SpongeBob, and the Worm",
+      "The Algae's Always Greener", "SpongeGuard on Duty", "Club SpongeBob", "My Pretty Seahorse", "Just One Bite",
+      "The Bully", "Nasty Patty", "Idiot Box", "Mermaid Man and Barnacle Boy IV", "Doing Time", "Snowball Effect",
+      "One Krabs' Trash", "As Seen on TV", "Can You Spare a Dime?", "No Weenies Allowed", "Squilliam Returns",
+      "Krab Borg", "Rock-a-Bye Bivalve", "Wet Painters", "Krusty Krab Training Video", "Party Pooper Pants",
+      "Chocolate with Nuts", "Mermaid Man and Barnacle Boy V", "New Student Starfish", "Clams", "Ugh (SpongeBob B.C.)",
+      "The Great Snail Race", "Mid-Life Crustacean", "Born Again Krabs", "I Had an Accident", "Krabby Land",
+      "The Camping Episode", "Missing Identity", "Plankton's Army", "The Sponge Who Could Fly",
+      "SpongeBob Meets the Strangler", "Pranks a Lot"
+    ];
+
+    // Shuffle episodes randomly
+    episodes = episodes.sort(() => Math.random() - 0.5);
+
+    let round = 1;
+    let currentMatchups = [...episodes];
+
+    function generateMatchups(episodes) {
+      const container = document.getElementById('bracket');
+      container.innerHTML = '';
+      for (let i = 0; i < episodes.length; i += 2) {
+        const ep1 = episodes[i];
+        const ep2 = episodes[i + 1] || 'BYE';
+
+        const matchup = document.createElement('div');
+        matchup.className = 'matchup';
+
+        const label = document.createElement('span');
+        label.textContent = `${ep1} vs ${ep2}`;
+
+        const btn1 = document.createElement('button');
+        btn1.textContent = ep1;
+        btn1.onclick = () => proceedToNextRound(ep1);
+
+        const btn2 = document.createElement('button');
+        btn2.textContent = ep2;
+        btn2.onclick = () => proceedToNextRound(ep2);
+
+        matchup.appendChild(label);
+        matchup.appendChild(btn1);
+        if (ep2 !== 'BYE') matchup.appendChild(btn2);
+
+        container.appendChild(matchup);
+      }
+    }
+
+    function proceedToNextRound(winner) {
+      if (!window.nextRoundSelections) window.nextRoundSelections = [];
+      window.nextRoundSelections.push(winner);
+
+      if (window.nextRoundSelections.length === Math.ceil(currentMatchups.length / 2)) {
+        currentMatchups = [...window.nextRoundSelections];
+        window.nextRoundSelections = [];
+        round++;
+
+        document.getElementById('bracket').innerHTML = `<h2>Round ${round}</h2>`;
+        generateMatchups(currentMatchups);
+
+        if (currentMatchups.length === 1) {
+          document.getElementById('bracket').innerHTML = `<h2 class='winner'>Winner: ${currentMatchups[0]}</h2>`;
+        }
+      }
+    }
+
+    generateMatchups(currentMatchups);
+  </script>
+</body>
+</html>
