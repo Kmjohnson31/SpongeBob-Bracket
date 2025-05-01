@@ -8,7 +8,8 @@
     body { font-family: Arial, sans-serif; padding: 20px; background: #f0f8ff; }
     h1 { text-align: center; }
     .matchup { margin: 10px 0; display: flex; justify-content: space-between; align-items: center; }
-    .matchup button { margin-left: 10px; }
+    .matchup button { margin-left: 10px; padding: 5px 15px; font-size: 14px; cursor: pointer; }
+    .matchup button.selected { background-color: #00FFFF; color: white; }
     .round { margin-top: 40px; }
     .winner { font-weight: bold; color: green; }
   </style>
@@ -66,11 +67,11 @@
 
         const btn1 = document.createElement('button');
         btn1.textContent = ep1;
-        btn1.onclick = () => proceedToNextRound(ep1);
+        btn1.onclick = () => proceedToNextRound(ep1, btn1);
 
         const btn2 = document.createElement('button');
         btn2.textContent = ep2;
-        btn2.onclick = () => proceedToNextRound(ep2);
+        btn2.onclick = () => proceedToNextRound(ep2, btn2);
 
         matchup.appendChild(label);
         matchup.appendChild(btn1);
@@ -80,7 +81,10 @@
       }
     }
 
-    function proceedToNextRound(winner) {
+    function proceedToNextRound(winner, selectedButton) {
+      // Highlight the selected button with aqua color
+      selectedButton.classList.add('selected');
+
       if (!window.nextRoundSelections) window.nextRoundSelections = [];
       window.nextRoundSelections.push(winner);
 
